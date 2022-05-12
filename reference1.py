@@ -43,6 +43,15 @@ if __name__ == '__main__':
     num_classes = 3  # 0 or 1
 
     q = open('./queries.txt', 'r')
+    mq = open('./modified_queries.txt', 'w')
+
+    while True:
+        str = q.readline()
+        if str == "":
+            break
+        
+
+    # Making 
 
     print(q.readlines())
 
