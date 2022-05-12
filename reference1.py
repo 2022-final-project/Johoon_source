@@ -1,6 +1,7 @@
 # code by Tae Hwan Jung(Jeff Jung) @graykode
 # Reference : https://github.com/prakashpandey9/Text-Classification-Pytorch/blob/master/models/LSTM_Attn.py
 import numpy as np
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -49,18 +50,23 @@ if __name__ == '__main__':
 
     while True:
         str = q.readline()
+
         if str == "":
             break
-        print("{", str, "}")
 
         if str[-1] == ";" or str[-2] == ";":
             colon_idx = str.find(";")
-            str = str[:colon_idx + 1]
-
-            
-        input_str = input_str + " " + str
+            str = str[0:colon_idx + 1]
+            print(" str in ; phase {", str, "}")
+            input_str = input_str + str
+            input_str = ""
+        elif str[-1] == '\n':
+            str = str[:len(str) - 1]
+            print(" str in \n phase {", str, "}")
+            input_str = input_str + str
+        else:
+            input_str = input_str + str
         mq.write(input_str)
-        input_str = ""
     mq.close()
 
     # 3 words sentences (=sequence_length is 3)
@@ -118,4 +124,6 @@ if __name__ == '__main__':
     ax.matshow(attention, cmap='viridis')
     ax.set_xticklabels(['']+['first_word', 'second_word', 'third_word'], fontdict={'fontsize': 14}, rotation=90)
     ax.set_yticklabels(['']+['batch_1', 'batch_2', 'batch_3', 'batch_4', 'batch_5', 'batch_6'], fontdict={'fontsize': 14})
-    plt.show()
+    # plt.show()
+
+    os.remove(mq)
