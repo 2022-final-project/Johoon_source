@@ -51,11 +51,17 @@ if __name__ == '__main__':
         str = q.readline()
         if str == "":
             break
-        input_str = input_str + " " + str
+        print("{", str, "}")
 
         if str[-1] == ";" or str[-2] == ";":
-            mq.write(input_str)
-            break
+            colon_idx = str.find(";")
+            str = str[:colon_idx + 1]
+
+            
+        input_str = input_str + " " + str
+        mq.write(input_str)
+        input_str = ""
+    mq.close()
 
     # 3 words sentences (=sequence_length is 3)
     sentences = ["i love you", "he loves me", "she likes baseball", "i hate you", "sorry for that", "this is awful"]
