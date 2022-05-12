@@ -54,9 +54,11 @@ if __name__ == '__main__':
         if str == "":
             break
 
+        print(" str :", str)
+
         if str[-1] == ";" or str[-2] == ";":
             colon_idx = str.find(";")
-            str = str[0:colon_idx + 1]
+            str = str[0:colon_idx]
             print(" str in ; phase {", str, "}")
             input_str = input_str + str
             input_str = ""
@@ -66,6 +68,7 @@ if __name__ == '__main__':
             input_str = input_str + str
         else:
             input_str = input_str + str
+        print(" ---input_str--->", input_str)
         mq.write(input_str)
     mq.close()
 
