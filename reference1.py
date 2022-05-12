@@ -45,15 +45,17 @@ if __name__ == '__main__':
     q = open('./queries.txt', 'r')
     mq = open('./modified_queries.txt', 'w')
 
+    input_str = ""
+
     while True:
         str = q.readline()
         if str == "":
             break
-        
+        input_str = input_str + " " + str
 
-    # Making 
-
-    print(q.readlines())
+        if str[-1] == ";" or str[-2] == ";":
+            mq.write(input_str)
+            break
 
     # 3 words sentences (=sequence_length is 3)
     sentences = ["i love you", "he loves me", "she likes baseball", "i hate you", "sorry for that", "this is awful"]
