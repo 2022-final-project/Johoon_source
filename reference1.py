@@ -44,6 +44,8 @@ class BiLSTM_Attention(nn.Module):
 
 class preProcessing():
     def __init__(self):
+        self.world_count = {}
+        self.world_count_size = 0
         self.table_vocab = {}
         self.col_vocab = {}
         self.vocab = {}
@@ -99,8 +101,28 @@ class preProcessing():
             print(" ", key, " : ", self.table_vocab[key])
 
     def whitespace(self):
-        words_count = {}
+        q = open('./queries.txt', 'r')
         
+        while True:
+            cur_str = q.readline()
+
+            if cur_str == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
+                break
+        
+            str_list = cur_str.split()
+
+            for val in str_list:
+                val.strip()
+
+                if val not in self.words_count:
+                    self.world_count[val] = 0
+                    self.world_count_size += 1
+                else:
+                    self.world_count[val] += 1
+    
+        for key in self.world_count:
+            print(key, " : ", self.world_count[key])
+    
 
         
                         
