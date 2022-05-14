@@ -99,7 +99,10 @@ class preProcessing():
             print(" ", key, " : ", self.table_vocab[key])
 
     def whitespace(self):
-            
+        words_count = {}
+        
+
+        
                         
 if __name__ == '__main__':
     embedding_dim = 2 # embedding size
