@@ -44,8 +44,8 @@ class BiLSTM_Attention(nn.Module):
 
 class preProcessing():
     def __init__(self):
-        self.world_count = {}
-        self.world_count_size = 0
+        self.word_count = {}
+        self.word_count_size = 0
         self.table_vocab = {}
         self.col_vocab = {}
         self.vocab = {}
@@ -112,18 +112,24 @@ class preProcessing():
             str_list = cur_str.split()
 
             for val in str_list:
+                if val[-1] == ",":
+                    val = val[0:len(val) - 1]
+
                 val.strip()
 
-                if val not in self.words_count:
-                    self.world_count[val] = 0
-                    self.world_count_size += 1
+                if val not in self.word_count:
+                    self.word_count[val] = 0
+                    self.word_count_size += 1
                 else:
-                    self.world_count[val] += 1
-    
-        for key in self.world_count:
-            print(key, " : ", self.world_count[key])
-    
+                    self.word_count[val] += 1
 
+        self.word_count = sorted(self.word_count.items(), reverse = True, key = lambda item: item[1])
+
+        wc = open('./words_count.txt', 'w')
+
+        for key, value in self.word_count:
+            input = key + " : " + str(value) + '\n'
+            wc.write(input)
         
                         
 if __name__ == '__main__':
