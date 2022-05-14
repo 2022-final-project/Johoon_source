@@ -160,7 +160,6 @@ from
 		select
 			n1.n_name as supp_nation,
 			n2.n_name as cust_nation,
-			extract(year from l_shipdate) as l_year,
 			l_extendedprice * (1 - l_discount) as volume
 		from
 			supplier,
@@ -200,7 +199,6 @@ select
 from
 	(
 		select
-			extract(year from o_orderdate) as o_year,
 			l_extendedprice * (1 - l_discount) as volume,
 			n2.n_name as nation
 		from
@@ -239,7 +237,6 @@ from
 	(
 		select
 			n_name as nation,
-			extract(year from o_orderdate) as o_year,
 			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
 		from
 			part,
@@ -395,41 +392,6 @@ where
 	and l_shipdate >= date '1995-03-01'
 	and l_shipdate < date '1995-03-01' + interval '1' month
 LIMIT 1;
-
-create view revenue (supplier_no, total_revenue) as
-	select
-		l_suppkey,
-		sum(l_extendedprice * (1 - l_discount))
-	from
-		lineitem
-	where
-		l_shipdate >= date '1995-03-01'
-		and l_shipdate < date '1995-03-01' + interval '3' month
-	group by
-		l_suppkey;
-
-
-select
-	s_suppkey,
-	s_name,
-	s_address,
-	s_phone,
-	total_revenue
-from
-	supplier,
-	revenue
-where
-	s_suppkey = supplier_no
-	and total_revenue = (
-		select
-			max(total_revenue)
-		from
-			revenue:s
-	)
-order by
-	s_suppkey;
-
-drop view revenue;
 
 select
 	p_brand,
@@ -642,13 +604,10 @@ select
 from
 	(
 		select
-			substring(c_phone from 1 for 2) as cntrycode,
 			c_acctbal
 		from
 			customer
 		where
-			substring(c_phone from 1 for 2) in
-				('12', '15', '18', '21', '24', '27', '30')
 			and c_acctbal > (
 				select
 					avg(c_acctbal)
@@ -656,8 +615,6 @@ from
 					customer
 				where
 					c_acctbal > 0.00
-					and substring(c_phone from 1 for 2) in
-						('12', '15', '18', '21', '24', '27', '30')
 			)
 			and not exists (
 				select

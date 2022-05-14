@@ -11,7 +11,7 @@ class BiLSTM_Attention(nn.Module):
     def __init__(self):
         super(BiLSTM_Attention, self).__init__()
 
-        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)                # vector 로 변환시켜주는 1 step
         self.lstm = nn.LSTM(embedding_dim, n_hidden, bidirectional=True)
         self.out = nn.Linear(n_hidden * 2, num_classes)
 
@@ -48,53 +48,91 @@ class preProcessing():
         self.col_vocab = {}
         self.vocab = {}
 
-        self.check_query()
+        # self.table_preProcessing()
+        self.whitespace()
 
     # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
-    def check_query(self):
+    def table_preProcessing(self):
         q = open('./queries.txt', 'r')
 
+        select_flag = False
+        from_flag = False
+
+        table_cnt = 0
+        col_cnt = 0
+
+        from_end_list = ["select", "where", "left", "right", "(", "group", "order"]
+
         while True:
-            str = q.readline()
+            cur_str = q.readline()
             
-            if (str == ""):
+            if (cur_str == ""):
                 break
             
-            str_list = str.split()
-            
+            str_list = cur_str.split()
+            str_list_np = np.array(str_list)
+            cur_size = str_list_np.size
+
             for val in str_list:
-                
+                val.strip()
+
+                if val[-1] == ",":
+                    val = val[0:len(val) - 1]
+
+                if val.lower() == "from":     # from 이 나온 경우
+                    from_flag = True            # from 이 나왔다는 변수를 True 로
+                    select_flag = False         # select 가 나왔다는 변수는 False
+                elif val.lower() in from_end_list:  # 현재 value 가 table 이 아닌 경우 
+                    from_flag = False               # from 나왔다는 변수를 다시 False 로
+                elif from_flag:                     # 현재 table 이 나오고 있는 경우
+                    if cur_size == 1:
+                        if val not in self.table_vocab:     # 아직 dictionary 에 없는 것 일 경우
+                            table_cnt += 1                  # dictionary 에 추가한다.
+                            self.table_vocab[val] = "t" + str(table_cnt)
+                        else:                               # 이미 있는 경우에는 pass 한다.
+                            continue
+                    elif cur_size == 2:                     # alias 를 준 경우에는
+                        if val == str_list[1]:              # alias 는 table_vocab 에 들어가지 않도록 조심한다.
+                            continue
+
+        for key in self.table_vocab:
+            print(" ", key, " : ", self.table_vocab[key])
+
+    def whitespace(self):
             
-
-        
-
+                        
 if __name__ == '__main__':
     embedding_dim = 2 # embedding size
     n_hidden = 5  # number of hidden units in one cell
-    num_classes = 3  # 0 or 1
+    num_classes = 2  # 0 or 1
 
     pre = preProcessing()   # 1. Set table name like [t1, t2, t3 ...]
-                            # 2. Set collum name like [c1, c2, c3 ...] 
+                            # 2. Set collum name like [c1, c2, c3 ...]
+
+
+
+
+
 
     # 3 words sentences (=sequence_length is 3)
     sentences = ["i love you", "he loves me", "she likes baseball", "i hate you", "sorry for that", "this is awful"]
-    labels = [1, 1, 1, 2, 0, 0]  # 1 is good, 0 is not good.
+    labels = [1, 1, 1, 1, 0, 0]  # 1 is good, 0 is not good.
 
     # sentences = ["SELECT * FROM T1", "SELECT C1 FROM T1, T2", "SELECT C1, C2 FROM T1", "SELECT C1, C2, C3 FROM T1, T2, T3", "SELECT C1 FROM T1 WHERE C2 = S1", "SELECT C2 FROM T1"]
     # labels = [1, 0, 1, 1, 0, 1]  # 1 is good, 0 is not good.
 
     word_list = " ".join(sentences).split()
     word_list = list(set(word_list))
-    print(word_list)
+    # print(word_list)
 
     word_dict = {w: i for i, w in enumerate(word_list)}
     
-    print(word_dict)
+    # print(word_dict)
     vocab_size = len(word_dict)
 
     model = BiLSTM_Attention()
     
-    print(model)
+    # print(model)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -107,6 +145,7 @@ if __name__ == '__main__':
         optimizer.zero_grad()
         output, attention = model(inputs)
         loss = criterion(output, targets)
+
         if (epoch + 1) % 1000 == 0:
             print('Epoch:', '%04d' % (epoch + 1), 'cost =', '{:.6f}'.format(loss))
 
@@ -163,4 +202,11 @@ if __name__ == '__main__':
             print(input_str)
 
         mq.close()
+    '''
+
+    '''
+    [Query 수정]
+        extract ... 이런거 없애고
+        view 없애고
+
     '''
