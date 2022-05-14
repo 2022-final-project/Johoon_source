@@ -37,40 +37,44 @@ class BiLSTM_Attention(nn.Module):
         attn_output, attention = self.attention_net(output, final_hidden_state)
         return self.out(attn_output), attention # model : [batch_size, num_classes], attention : [batch_size, n_step]
 
+
+'''
+    1. AI 에서 Data Preprocessing 을 할 때 train_data 로 하는게 맞죠?
+'''
+
+class preProcessing():
+    def __init__(self):
+        self.table_vocab = {}
+        self.col_vocab = {}
+        self.vocab = {}
+
+        self.check_query()
+
+    # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
+    def check_query(self):
+        q = open('./queries.txt', 'r')
+
+        while True:
+            str = q.readline()
+            
+            if (str == ""):
+                break
+            
+            str_list = str.split()
+            
+            for val in str_list:
+                
+            
+
+        
+
 if __name__ == '__main__':
     embedding_dim = 2 # embedding size
     n_hidden = 5  # number of hidden units in one cell
     num_classes = 3  # 0 or 1
 
-    q = open('./queries.txt', 'r')
-    mq = open('./modified_queries.txt', 'w')
-
-    input_str = ""
-
-    while True:
-        str = q.readline()
-
-        if str == "":
-            break
-        str = str.strip()
-        print(" str :", str)
-
-        if str[-1] == ";" or str[-2] == ";":
-            colon_idx = str.find(";")
-            str = str[0:colon_idx]
-
-            input_str = input_str + " " + str + '\n'
-            print("---input_str--->", input_str)
-            mq.write(input_str)
-            input_str = ""
-        elif str[-1] == '\n':
-            str = str[:len(str) - 1]
-
-            input_str = input_str + " " + str
-        else:
-            input_str = input_str + " " + str
-        print(" ---input_str--->", input_str)
-    mq.close()
+    pre = preProcessing()   # 1. Set table name like [t1, t2, t3 ...]
+                            # 2. Set collum name like [c1, c2, c3 ...] 
 
     # 3 words sentences (=sequence_length is 3)
     sentences = ["i love you", "he loves me", "she likes baseball", "i hate you", "sorry for that", "this is awful"]
@@ -128,3 +132,35 @@ if __name__ == '__main__':
     ax.set_xticklabels(['']+['first_word', 'second_word', 'third_word'], fontdict={'fontsize': 14}, rotation=90)
     ax.set_yticklabels(['']+['batch_1', 'batch_2', 'batch_3', 'batch_4', 'batch_5', 'batch_6'], fontdict={'fontsize': 14})
     # plt.show()
+
+    '''
+    q = open('./queries.txt', 'r')
+        mq = open('./modified_queries.txt', 'w')
+
+        input_str = ""
+
+        while True:
+            str = q.readline()
+
+            if str == "":
+                break
+            str = str.strip()
+
+            if str[-1] == ";" or str[-2] == ";":
+                colon_idx = str.find(";")
+                str = str[0:colon_idx]
+
+                input_str = input_str + " " + str + '\n'
+
+                mq.write(input_str)
+                input_str = ""
+            elif str[-1] == '\n':
+                str = str[:len(str) - 1]
+
+                input_str = input_str + " " + str
+            else:
+                input_str = input_str + " " + str
+            print(input_str)
+
+        mq.close()
+    '''
