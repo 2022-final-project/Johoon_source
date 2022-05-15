@@ -54,9 +54,9 @@ class preProcessing():
         self.col_list = {}
         self.vocab = {}
 
-        self.make_query_one_sentence()
-        self.process_by_one_query()
-        self.make_query_one_sentence2()
+        self.make_query_one_sentence()      # ";" 를 기준으로 한 행에 한 Query 가 들어가게 한다.
+        self.process_by_one_query()         
+        # self.make_query_one_sentence2()
         # self.table_preProcessing()
         # self.whitespace()
         # self.modify1()
@@ -78,6 +78,7 @@ class preProcessing():
     def process_by_one_query(self):
         q = open('./one_query_one_sentence.txt', 'r')
         w = open('./modified_one_query_one_sentence.txt', 'w')
+        wv1 = open('./temporary_vocab.txt', "w")
 
         while True:
             cur_query = q.readline()
@@ -89,19 +90,25 @@ class preProcessing():
             word_list = cur_query.split()
 
             alias_list = []
+            alias_flag = False
 
             for word in word_list:
-                print(" word is ", word)
                 word = self.word_refine(word)
-                print(" 함수나오면", word)
 
                 if word == "":
-                    continue;
+                    continue
 
-                if word[-1] != ";":
-                    w.write(word + " ")
-                else:
-                    w.write(word + '\n')
+                if word == "as":
+                    alias_flag = True
+                elif alias_flag:
+                    alias_list.append(word)
+                    alias_flag = False
+                
+
+                # if word[-1] != ";":
+                #     w.write(word + " ")
+                # else:
+                #     w.write(word + '\n')
 
     # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
     def table_preProcessing(self):
