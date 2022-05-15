@@ -46,16 +46,19 @@ class preProcessing():
     def __init__(self):
         self.sql_words = ["select", "from", "where", "join", "left", "right", "outer", "group", "order", "by", "limit",
                             "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", 
-                            "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "="]
+                            "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=",
+                            "date", "asc", "desc"]
         self.before_then_ignore = ["as", "limit"]
         self.word_count = {}
         self.table_list = {}
         self.col_list = {}
         self.vocab = {}
 
+        self.make_query_one_sentence()
+        self.process_by_one_query()
         # self.table_preProcessing()
         # self.whitespace()
-        self.modify1()
+        # self.modify1()
 
     # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
     def table_preProcessing(self):
@@ -170,13 +173,43 @@ class preProcessing():
                     continue
                 elif val != "" and 48 <= ord(val[0]) and ord(val[0]) <= 57:
                     continue
-                elif val == "":
+                elif val == "\n" or val == "":
                     continue
 
                 print(val)
                 
                 w.write(val + '\n')
 
+    def make_query_one_sentence(self):
+        q = open('./queries.txt', 'r')
+        w = open('./one_query_one_sentence.txt', 'w')
+
+        while True:
+            cur_str = q.readline()
+
+            if cur_str == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
+                break
+        
+            str_list = cur_str.split()
+
+            for val in str_list:
+                val = val.strip()
+                val = val.lower()
+                
+                if val[-1] != ";":
+                    w.write(val + " ")
+                else:
+                    w.write(val + '\n')
+
+    def process_by_one_query(self):
+        q = open('./one_query_one_sentence.txt', 'r')
+
+        while True:
+            cur_str = q.readline()
+            print(cur_str)
+
+            if cur_str == "":
+                break
 '''
     [modify1 method 사용 원칙]
     1. talbe, column name 은 안에 하지말기
@@ -189,9 +222,6 @@ if __name__ == '__main__':
 
     pre = preProcessing()   # 1. Set table name like [t1, t2, t3 ...]
                             # 2. Set collum name like [c1, c2, c3 ...]
-
-
-
 
     # 3 words sentences (=sequence_length is 3)
     sentences = ["i love you", "he loves me", "she likes baseball", "i hate you", "sorry for that", "this is awful"]
