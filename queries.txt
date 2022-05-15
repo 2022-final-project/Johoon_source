@@ -423,7 +423,8 @@ order by
 	supplier_cnt desc,
 	p_brand,
 	p_type,
-	p_size;
+	p_size
+LIMIT 1;
 
 select
 	sum(l_extendedprice) / 7.0 as avg_yearly

@@ -14,3 +14,4 @@
    - column 이름을 `desc`, `date` 등과 같이 함수로 쓰이는 단어와 겹치지 않게 한다.
    - alias 부여시 `as` 를 사용한다.
    - `substring` 을 사용하지 않는다.
+   - 모두 LIMIT 1; 부여
