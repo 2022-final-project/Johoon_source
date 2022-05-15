@@ -44,9 +44,10 @@ class BiLSTM_Attention(nn.Module):
 
 class preProcessing():
     def __init__(self):
-        self.sql_words = ["select", "from", "join", "left", "right", "outer", "group", "order", "by", "limit",
-                            "sum", "avg", "min", "max", "count", "in", "exists", "like", "as",
-                            "*", ">", ">=", "<", "=<", "==", "/", "-", "+"]
+        self.sql_words = ["select", "from", "where", "join", "left", "right", "outer", "group", "order", "by", "limit",
+                            "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", 
+                            "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "="]
+        self.before_then_ignore = ["as", "limit"]
         self.word_count = {}
         self.table_list = {}
         self.col_list = {}
@@ -144,24 +145,42 @@ class preProcessing():
                 break
         
             str_list = cur_str.split()
-
+            bef_val = ""
             for val in str_list:
                 if val[-1] == ",":
                     val = val[0:len(val) - 1]
 
-                val.strip()
-                
+                val = val.strip()
+                val = val.lower()
+                val = val.strip('(')
+                val = val.strip(')')
+
+                if bef_val in self.before_then_ignore:
+                    continue
+                elif val in self.sql_words:
+                    continue
+
+                bef_val = val
+
                 if val[0:3] in ["sum", "avg", "min", "max"]:
                     continue
                 elif val[0:5] == "count":
                     continue
-
-                if val in self.sql_words:
+                elif val != "" and (val[0] == "'" or val[-1] == "'"):
                     continue
+                elif val != "" and 48 <= ord(val[0]) and ord(val[0]) <= 57:
+                    continue
+                elif val == "":
+                    continue
+
+                print(val)
                 
                 w.write(val + '\n')
-                
-                
+
+'''
+    [modify1 method 사용 원칙]
+    1. talbe, column name 은 안에 하지말기
+'''                
                         
 if __name__ == '__main__':
     embedding_dim = 2 # embedding size

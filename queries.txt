@@ -21,6 +21,7 @@ order by
 	l_linestatus
 
 LIMIT 1;
+
 select
 	s_acctbal,
 	s_name,
