@@ -56,9 +56,52 @@ class preProcessing():
 
         self.make_query_one_sentence()
         self.process_by_one_query()
+        self.make_query_one_sentence2()
         # self.table_preProcessing()
         # self.whitespace()
         # self.modify1()
+
+    def word_refine(self, cur_word):
+        cur_word = cur_word.split()
+        cur_word = cur_word[0]
+        if cur_word[-1] == ",":
+            cur_word = cur_word[0:len(cur_word) - 1]
+        cur_word = cur_word.split(")")
+        cur_word = cur_word[0]
+        cur_word = cur_word.split("(")
+        cur_word = cur_word[0]
+        cur_word = cur_word.split("'")
+        cur_word = cur_word[0]
+        print("  --->", cur_word)
+        return cur_word
+
+    def process_by_one_query(self):
+        q = open('./one_query_one_sentence.txt', 'r')
+        w = open('./modified_one_query_one_sentence.txt', 'w')
+
+        while True:
+            cur_query = q.readline()
+            print(cur_query)
+
+            if cur_query == "":
+                break
+
+            word_list = cur_query.split()
+
+            alias_list = []
+
+            for word in word_list:
+                print(" word is ", word)
+                word = self.word_refine(word)
+                print(" 함수나오면", word)
+
+                if word == "":
+                    continue;
+
+                if word[-1] != ";":
+                    w.write(word + " ")
+                else:
+                    w.write(word + '\n')
 
     # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
     def table_preProcessing(self):
@@ -201,15 +244,26 @@ class preProcessing():
                 else:
                     w.write(val + '\n')
 
-    def process_by_one_query(self):
-        q = open('./one_query_one_sentence.txt', 'r')
+    def make_query_one_sentence2(self):
+        q = open('./modified_one_query_one_sentence.txt', 'r')
+        w = open('./sss.txt', 'w')
 
         while True:
             cur_str = q.readline()
-            print(cur_str)
 
-            if cur_str == "":
+            if cur_str == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
                 break
+        
+            str_list = cur_str.split()
+
+            for val in str_list:
+                val = val.strip()
+                val = val.lower()
+                
+                if val[-1] != ";":
+                    w.write(val + " ")
+                else:
+                    w.write(val + '\n')
 '''
     [modify1 method 사용 원칙]
     1. talbe, column name 은 안에 하지말기
