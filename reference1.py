@@ -44,14 +44,16 @@ class BiLSTM_Attention(nn.Module):
 
 class preProcessing():
     def __init__(self):
+        self.sql_words = ["select", "from", "join", "left", "right", "outer", "group", "order", "by", "limit",
+                            "sum", "avg", "min", "max", "count", "in", "exists", "like"]
         self.word_count = {}
-        self.word_count_size = 0
-        self.table_vocab = {}
-        self.col_vocab = {}
+        self.table_list = {}
+        self.col_list = {}
         self.vocab = {}
 
         # self.table_preProcessing()
-        self.whitespace()
+        # self.whitespace()
+        self.modify1()
 
     # query 들을 통해 vocab.txt 생성을 위한 정보들을 따오는 함수
     def table_preProcessing(self):
@@ -119,7 +121,6 @@ class preProcessing():
 
                 if val not in self.word_count:
                     self.word_count[val] = 0
-                    self.word_count_size += 1
                 else:
                     self.word_count[val] += 1
 
@@ -130,7 +131,31 @@ class preProcessing():
         for key, value in self.word_count:
             input = key + " : " + str(value) + '\n'
             wc.write(input)
+
+    def modify1(self):
+        q = open('./queries.txt', 'r')
+        w = open('./modified_query1.txt', 'w')
+
+        while True:
+            cur_str = q.readline()
+
+            if cur_str == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
+                break
         
+            str_list = cur_str.split()
+
+            for val in str_list:
+                if val[-1] == ",":
+                    val = val[0:len(val) - 1]
+
+                val.strip()
+
+                if val in self.sql_words:
+                    val = "%"
+                
+                w.write(val)
+                
+                
                         
 if __name__ == '__main__':
     embedding_dim = 2 # embedding size
