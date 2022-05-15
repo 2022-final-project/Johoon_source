@@ -31,7 +31,8 @@ class preProcessing():
         cur_word = cur_word.split("(")
         cur_word = cur_word[0]
         if (cur_word.find("'") != -1):
-            if (cur)
+            if cur_word.count("'") == 2:
+                return ""
             print(" word : ", cur_word, " 에서 delete state == ", self.delete_state)
             if self.delete_state == False:
                 self.delete_state = True
