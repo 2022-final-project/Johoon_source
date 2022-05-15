@@ -45,7 +45,8 @@ class BiLSTM_Attention(nn.Module):
 class preProcessing():
     def __init__(self):
         self.sql_words = ["select", "from", "join", "left", "right", "outer", "group", "order", "by", "limit",
-                            "sum", "avg", "min", "max", "count", "in", "exists", "like"]
+                            "sum", "avg", "min", "max", "count", "in", "exists", "like", "as",
+                            "*", ">", ">=", "<", "=<", "==", "/", "-", "+"]
         self.word_count = {}
         self.table_list = {}
         self.col_list = {}
@@ -149,11 +150,16 @@ class preProcessing():
                     val = val[0:len(val) - 1]
 
                 val.strip()
+                
+                if val[0:3] in ["sum", "avg", "min", "max"]:
+                    continue
+                elif val[0:5] == "count":
+                    continue
 
                 if val in self.sql_words:
-                    val = "%"
+                    continue
                 
-                w.write(val)
+                w.write(val + '\n')
                 
                 
                         
@@ -164,8 +170,6 @@ if __name__ == '__main__':
 
     pre = preProcessing()   # 1. Set table name like [t1, t2, t3 ...]
                             # 2. Set collum name like [c1, c2, c3 ...]
-
-
 
 
 
