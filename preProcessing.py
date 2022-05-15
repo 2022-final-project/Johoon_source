@@ -38,6 +38,7 @@ class preProcessing():
                 self.delete_state = True
             elif self.delete_state == True:
                 self.delete_state = False
+                return ""
 
         cur_word = cur_word.split("'")
         cur_word = cur_word[0]
