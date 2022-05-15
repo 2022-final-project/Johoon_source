@@ -1,0 +1,11 @@
+l_returnflag l_linestatus l_discount l_discount l_tax l_shipdate s_nationkey n_nationkey n_regionkey r_regionkey r_name s_acctbal n_name s_name p_partkey 
+l_orderkey l_discount o_orderdate o_shippriority c_mktsegment l_shipdate o_orderdate o_orderdate n_name 
+l_discount l_shipdate l_discount l_quantity 
+l_year n_name n_name l_extendedprice l_discount s_suppkey l_suppkey o_orderkey l_orderkey c_custkey o_custkey s_nationkey n_nationkey c_nationkey n_nationkey l_shipdate l_year l_year 
+o_year s_nationkey n_nationkey o_orderdate p_type tin o_year o_year 
+o_year n_name l_extendedprice l_discount ps_supplycost l_quantity s_suppkey l_suppkey ps_suppkey l_suppkey ps_partkey l_partkey p_partkey l_partkey o_orderkey l_orderkey s_nationkey n_nationkey p_name o_orderdate l_returnflag ps_partkey ps_availqty ps_availqty ps_suppkey s_suppkey s_nationkey n_nationkey n_name o_orderpriority o_orderpriority l_commitdate l_receiptdate l_shipdate l_commitdate l_receiptdate c_custkey c_count c_count c_count 
+p_type l_shipdate 
+p_brand p_type p_size ps_suppkey p_partkey ps_partkey p_brand p_size ps_suppkey s_suppkey s_comment p_container pack l_quantity l_partkey p_partkey 
+c_name c_custkey o_orderkey o_orderdate o_totalprice o_orderkey l_orderkey l_orderkey c_custkey o_custkey o_orderkey l_orderkey c_name c_custkey o_orderkey o_orderdate o_totalprice o_totalprice o_orderdate 
+l_discount p_partkey l_partkey p_brand case box pack pkg l_quantity l_quantity p_size l_shipmode reg l_shipinstruct person p_partkey l_partkey p_brand bag box pkg pack l_quantity l_quantity p_size l_shipmode reg l_shipinstruct person p_partkey l_partkey p_brand case box pack pkg l_quantity l_quantity p_size l_shipmode reg l_shipinstruct person 
+s_name s_address s_suppkey ps_suppkey ps_partkey p_partkey p_name l_shipdate s_nationkey n_nationkey n_name l_receiptdate l_commitdate l_orderkey l_orderkey l_suppkey l_suppkey l_orderkey l_orderkey l_suppkey l_suppkey l_receiptdate l_commitdate s_nationkey n_nationkey n_name 

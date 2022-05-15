@@ -3,8 +3,8 @@ import numpy as np
 class preProcessing():
     def __init__(self):
         self.sql_words = ["select", "from", "where", "join", "left", "right", "outer", "group", "order", "by", "limit",
-                            "when", "then", "having",
-                            "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", "not"
+                            "when", "then", "having", "interval", 
+                            "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", "not", 
                             "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=",
                             "date", "month", "year", "asc", "desc", "<>"]
         self.before_then_ignore = ["as", "limit"]
@@ -12,6 +12,7 @@ class preProcessing():
         self.table_list = {}
         self.col_list = {}
         self.vocab = {}
+        self.delete_state = False
 
         self.table_preProcessing()
         self.make_query_one_sentence()      # ";" 를 기준으로 한 행에 한 Query 가 들어가게 한다.
@@ -29,13 +30,22 @@ class preProcessing():
         cur_word = cur_word[0]
         cur_word = cur_word.split("(")
         cur_word = cur_word[0]
+        if (cur_word.find("'") != -1):
+            print(" word : ", cur_word, " 에서 delete state == ", self.delete_state)
+            if self.delete_state == False:
+                self.delete_state = True
+            elif self.delete_state == True:
+                self.delete_state = False
+
         cur_word = cur_word.split("'")
         cur_word = cur_word[0]
+        if self.delete_state:
+            cur_word = ""
         return cur_word
 
     def process_by_one_query(self):
         q = open('./one_query_one_sentence.txt', 'r')
-        w = open('./modified_one_query_one_sentence.txt', 'w')
+        w = open('./column_list.txt', 'w')
         wv1 = open('./temporary_vocab.txt', "w")
 
         while True:
