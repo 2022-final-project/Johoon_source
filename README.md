@@ -19,3 +19,4 @@
    - 모두 LIMIT 1; 부여
 
 `220516`
+1. 이후 tokenizing 및 BERT 과정을 위한 vocab.txt 베타(?) 버전 제작 완료
