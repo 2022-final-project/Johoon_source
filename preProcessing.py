@@ -6,7 +6,7 @@ class preProcessing():
                             "when", "then", "case", "having", "interval", 
                             "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", "not", 
                             "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=",
-                            "date", "month", "year", "asc", "desc", "<>", "on", "end"]
+                            "date", "month", "year", "asc", "desc", "<>", "on", "end", "if", "else"]
         self.before_then_ignore = ["as", "limit"]
         self.word_count = {}
         self.table_list = {}
@@ -16,10 +16,36 @@ class preProcessing():
 
         self.table_preProcessing()
         self.make_query_one_sentence()      # ";" 를 기준으로 한 행에 한 Query 가 들어가게 한다.
-        self.process_by_one_query()         
+        self.process_by_one_query()
+        self.column_preProcessing()       
         # self.make_query_one_sentence2()
         # self.whitespace()
         # self.modify1()
+
+    def column_preProcessing(self):
+        c = open('./column_list.txt', 'r')
+        
+        col_num = 1;
+
+        while True:
+            query_cols = q.readline()
+
+            if query_cols == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
+                break
+        
+            col_list = query_cols.split()
+
+            for col in col:
+                col = self.word_refine(col)
+
+                if col not in self.col_list:
+                    col_num += 1                  # dictionary 에 추가한다.
+                    self.col_list[col] = "c" + str(col_num)
+
+        print(" Column lists")
+        for key, value in self.col_list:
+            print(key, ":", value)
+        
 
     def word_refine(self, cur_word):
         cur_word = cur_word.split()
@@ -50,6 +76,8 @@ class preProcessing():
         w = open('./column_list.txt', 'w')
         wv1 = open('./temporary_vocab.txt', "w")
 
+        cntt = 0
+
         while True:
             cur_query = q.readline()
             # print(cur_query)
@@ -57,6 +85,8 @@ class preProcessing():
             if cur_query == "":
                 break
 
+            cntt += 1
+            print(" ocunt is ", cntt)
             word_list = cur_query.split()
 
 
@@ -70,10 +100,16 @@ class preProcessing():
                     word_list[idx + 1] = word_list[idx + 1][0:len(word_list[idx + 1]) - 1]
                 alias_list.append(word_list[idx + 1])
 
+    # 이후 쿼리의 마지막은 word == word_list[len(word_list) - 1] 로 수정
             for word in word_list:
+                if word == word_list[len(word_list) - 1]:
+                    w.write('\n')
+                    break
+                if 3 < len(word) and word[0:3] in ["sum", "avg", "min", "max"]:
+                    word = word[4:]
+                    print("w fwe afe ;", word)
+                
                 word = self.word_refine(word)
-                if len(word) > 0 and word[0] == "e":
-                    print("Word is ", word, " len is ", len(word))
                 if word == "":
                     continue
                 if word in self.sql_words or (48 <= ord(word[0]) and ord(word[0]) <= 57) or word in alias_list:
@@ -83,12 +119,18 @@ class preProcessing():
                         continue
                 
                 if word in self.table_list or word in alias_list:
+                    if end_flag:
+                        end_flag = False
+                        w.write('\n')
                     continue
 
                 for alias in alias_list:
                     if len(alias) < len(word):
                         if word[0:len(alias)] == alias and word[len(alias)] == ".":
                             word = word[len(alias) + 1:]
+                    if end_flag:
+                        end_flag = False
+                        w.write('\n')
 
                 if end_flag == False:
                     w.write(word + " ")
@@ -228,12 +270,12 @@ class preProcessing():
         q = open('./queries.txt', 'r')
         w = open('./one_query_one_sentence.txt', 'w')
 
+        query_cnt = 0
         while True:
             cur_str = q.readline()
 
             if cur_str == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
                 break
-        
             str_list = cur_str.split()
 
             for val in str_list:
@@ -243,6 +285,8 @@ class preProcessing():
                 if val[-1] != ";":
                     w.write(val + " ")
                 else:
+                    query_cnt += 1
+                    print(" query count is ", query_cnt)
                     w.write(val + '\n')
 
     def make_query_one_sentence2(self):
