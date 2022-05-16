@@ -3,10 +3,10 @@ import numpy as np
 class preProcessing():
     def __init__(self):
         self.sql_words = ["select", "from", "where", "join", "left", "right", "outer", "group", "order", "by", "limit",
-                            "when", "then", "having", "interval", 
+                            "when", "then", "case", "having", "interval", 
                             "sum", "avg", "min", "max", "count", "in", "exists", "like", "as", "and", "or", "between", "not", 
                             "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=",
-                            "date", "month", "year", "asc", "desc", "<>"]
+                            "date", "month", "year", "asc", "desc", "<>", "on", "end"]
         self.before_then_ignore = ["as", "limit"]
         self.word_count = {}
         self.table_list = {}
@@ -33,7 +33,6 @@ class preProcessing():
         if (cur_word.find("'") != -1):
             if cur_word.count("'") == 2:
                 return ""
-            print(" word : ", cur_word, " 에서 delete state == ", self.delete_state)
             if self.delete_state == False:
                 self.delete_state = True
             elif self.delete_state == True:
@@ -73,7 +72,8 @@ class preProcessing():
 
             for word in word_list:
                 word = self.word_refine(word)
-
+                if len(word) > 0 and word[0] == "e":
+                    print("Word is ", word, " len is ", len(word))
                 if word == "":
                     continue
                 if word in self.sql_words or (48 <= ord(word[0]) and ord(word[0]) <= 57) or word in alias_list:
