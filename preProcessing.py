@@ -25,25 +25,26 @@ class preProcessing():
     def column_preProcessing(self):
         c = open('./column_list.txt', 'r')
         
-        col_num = 1;
+        col_num = 0;
 
         while True:
-            query_cols = q.readline()
+            query_cols = c.readline()
 
             if query_cols == "":       # 더 이상 단어가 없는 경우 반복문을 종료한다.
                 break
         
             col_list = query_cols.split()
 
-            for col in col:
-                col = self.word_refine(col)
+            for col in col_list:
+                if col[-1] == "*":
+                    col = col[0:len(col) - 1]
 
                 if col not in self.col_list:
                     col_num += 1                  # dictionary 에 추가한다.
                     self.col_list[col] = "c" + str(col_num)
 
         print(" Column lists")
-        for key, value in self.col_list:
+        for key, value in self.col_list.items():
             print(key, ":", value)
         
 
@@ -86,7 +87,7 @@ class preProcessing():
                 break
 
             cntt += 1
-            print(" ocunt is ", cntt)
+            # print(" ocunt is ", cntt)
             word_list = cur_query.split()
 
 
@@ -105,9 +106,9 @@ class preProcessing():
                 if word == word_list[len(word_list) - 1]:
                     w.write('\n')
                     break
-                if 3 < len(word) and word[0:3] in ["sum", "avg", "min", "max"]:
+                if 4 < len(word) and word[0:4] in ["sum(", "avg(", "min(", "max("]:
                     word = word[4:]
-                    print("w fwe afe ;", word)
+                    # ("w fwe afe ;", word)
                 
                 word = self.word_refine(word)
                 if word == "":
@@ -139,7 +140,7 @@ class preProcessing():
                     wlen = len(word)
                     word = word[0:wlen - 1]
                     word = self.word_refine(word)
-                    print(" refined word : ", word)
+                    # print(" refined word : ", word)
                     if word in self.sql_words or (48 <= ord(word[0]) and ord(word[0]) <= 57) or word in alias_list:
                         word = ""
                     elif word in self.table_list or word in alias_list:

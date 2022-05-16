@@ -1,4 +1,4 @@
-l_returnflag l_linestatus l_quantity qty l_extendedprice base_price l_extendedprice l_discount disc_price l_extendedprice l_discount l_tax charge l_quantity qty l_extendedprice price l_discount disc l_shipdate l_returnflag l_linestatus l_returnflag l_linestatus 
+l_returnflag l_linestatus l_quantity l_extendedprice l_extendedprice l_discount l_extendedprice l_discount l_tax l_quantity l_extendedprice l_discount l_shipdate l_returnflag l_linestatus l_returnflag l_linestatus 
 s_acctbal s_name n_name p_partkey p_mfgr s_address s_phone s_comment p_partkey ps_partkey s_suppkey ps_suppkey p_size p_type s_nationkey n_nationkey n_regionkey r_regionkey r_name ps_supplycost ps_supplycost p_partkey ps_partkey s_suppkey ps_suppkey s_nationkey n_nationkey n_regionkey r_regionkey r_name s_acctbal n_name s_name p_partkey 
 l_orderkey l_extendedprice l_discount o_orderdate o_shippriority c_mktsegment c_custkey o_custkey l_orderkey o_orderkey o_orderdate l_shipdate l_orderkey o_orderdate o_shippriority o_orderdate 
 o_orderpriority o_orderdate o_orderdate l_orderkey o_orderkey l_commitdate l_receiptdate o_orderpriority o_orderpriority 
@@ -13,7 +13,7 @@ l_shipmode o_orderpriority o_orderpriority o_orderpriority o_orderpriority o_ord
 c_count c_custkey c_custkey o_custkey o_comment c_custkey c_count c_count c_count 
 p_type l_extendedprice l_discount l_extendedprice l_discount l_partkey p_partkey l_shipdate l_shipdate 
 p_brand p_type p_size ps_suppkey p_partkey ps_partkey p_brand p_type p_size ps_suppkey s_suppkey s_comment p_brand p_type p_size p_brand p_type p_size 
-l_extendedprice yearly p_partkey l_partkey p_brand p_container l_quantity l_quantity l_partkey p_partkey 
+l_extendedprice p_partkey l_partkey p_brand p_container l_quantity l_quantity l_partkey p_partkey 
 c_name c_custkey o_orderkey o_orderdate o_totalprice l_quantity o_orderkey l_orderkey l_orderkey l_quantity c_custkey o_custkey o_orderkey l_orderkey c_name c_custkey o_orderkey o_orderdate o_totalprice o_totalprice o_orderdate 
 l_extendedprice* l_discount p_partkey l_partkey p_brand p_container l_quantity l_quantity p_size l_shipmode l_shipinstruct p_partkey l_partkey p_brand p_container 
 
