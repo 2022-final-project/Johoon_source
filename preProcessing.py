@@ -1,4 +1,5 @@
 import numpy as np
+from pkg_resources import ensure_directory
 
 class preProcessing():
     def __init__(self):
@@ -8,6 +9,7 @@ class preProcessing():
                             "*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=",
                             "date", "month", "year", "asc", "desc", "<>", "on", "end", "if", "else"]
         self.before_then_ignore = ["as", "limit"]
+        self.operators = ["*", ">", ">=", "<", "=<", "<=", "=>", "==", "/", "-", "+", "=", "<>"]
         self.word_count = {}
         self.table_list = {}
         self.col_list = {}
@@ -18,9 +20,95 @@ class preProcessing():
         self.make_query_one_sentence()      # ";" 를 기준으로 한 행에 한 Query 가 들어가게 한다.
         self.process_by_one_query()
         self.column_preProcessing()       
+        self.refine_words()
         # self.make_query_one_sentence2()
         # self.whitespace()
         # self.modify1()
+    def refine_words(self):
+        q = open('./one_query_one_sentence.txt', 'r')
+        w = open('./refined_query_to_make_vocab.txt', 'w')
+
+        while True:
+            query = q.readline()
+
+            if query == "":
+                break
+            
+            word_list = query.split()
+            # print(word_list)
+
+            list_len = len(word_list)
+
+            delete_flag = False
+
+            for i, word in enumerate(word_list):
+
+                if len(word) == 0:
+                    continue
+
+                word = word.strip()
+
+                if word[-1] == ",":
+                    word = word[:len(word) - 1]
+
+                while word != word.strip("(") or word != word.strip(")") or word != word.strip("*") or word != word.strip("+") or word != word.strip("-"):
+                    word = word.strip("(")
+                    word = word.strip(")")
+                    word = word.strip("*")
+                    word = word.strip("+")
+                    word = word.strip("-")
+
+                if word in self.table_list:
+                    word = self.table_list[word]
+                elif word in self.col_list:
+                    word = self.col_list[word]
+
+                if 0 < len(word) and (48 <= ord(word[0]) and ord(word[0]) <= 57):
+                    word = ""
+
+                if word in self.operators:
+                    word = ""
+
+                if word.startswith("'"):
+                    if word.endswith("'"):
+                        word = ""
+                    else:
+                        delete_flag = True
+                elif word.endswith("'"):
+                    word = ""
+                    delete_flag = False
+
+                if 4 < len(word) and word[0:4] in ["sum(", "avg(", "min(", "max("]:
+                    word = word[:3] + " "
+
+                    nxt_word = word[4:]
+
+                    if nxt_word in self.table_list:
+                        nxt_word = self.table_list[word]
+                    elif nxt_word in self.col_list:
+                        nxt_word = self.col_list[word]
+
+                    word = word + nxt_word
+
+                if 6 < len(word) and word[0:6] in ["count("]:
+                    word = word[:5] + " "
+
+                    nxt_word = word[6:]
+
+                    if nxt_word in self.table_list:
+                        nxt_word = self.table_list[word]
+                    elif nxt_word in self.col_list:
+                        nxt_word = self.col_list[word]
+
+                    word = word + nxt_word
+
+                if delete_flag:
+                    word = ""
+
+                if i < list_len - 1:
+                    w.write(word + " ")
+                else:
+                    w.write(word + '\n')
 
     def column_preProcessing(self):
         c = open('./column_list.txt', 'r')
@@ -43,9 +131,10 @@ class preProcessing():
                     col_num += 1                  # dictionary 에 추가한다.
                     self.col_list[col] = "c" + str(col_num)
 
-        print(" Column lists")
+        # print(" Column lists")
         for key, value in self.col_list.items():
-            print(key, ":", value)
+            None
+            # print(key, ":", value)
         
 
     def word_refine(self, cur_word):
@@ -95,10 +184,12 @@ class preProcessing():
             alias_list = []
             word_list_np = np.array(word_list)
             alias_idx = np.where(word_list_np == "as")[0]
-            
+
             for idx in alias_idx:
+                # print("alias : ", word_list[idx + 1])
                 if word_list[idx + 1][-1] == ",":
                     word_list[idx + 1] = word_list[idx + 1][0:len(word_list[idx + 1]) - 1]
+                # print("   -----> ", word_list[idx + 1])
                 alias_list.append(word_list[idx + 1])
 
     # 이후 쿼리의 마지막은 word == word_list[len(word_list) - 1] 로 수정
@@ -287,7 +378,7 @@ class preProcessing():
                     w.write(val + " ")
                 else:
                     query_cnt += 1
-                    print(" query count is ", query_cnt)
+                    # print(" query count is ", query_cnt)
                     w.write(val + '\n')
 
     def make_query_one_sentence2(self):
