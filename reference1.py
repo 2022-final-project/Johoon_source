@@ -66,9 +66,19 @@ if __name__ == '__main__':
 
     word_list = " ".join(sentences).split()
     word_list = list(set(word_list))
-    # print(word_list)
+    print(word_list)
 
     word_dict = {w: i for i, w in enumerate(word_list)}
+
+    v = open('./vocab.txt', 'r')
+    my_word_dict = {}
+
+    for idx, val in enumerate(v):
+        val = val[:len(val) - 1]
+        my_word_dict[val] = idx
+
+    print(" my word dict is ")
+    print(my_word_dict)
     
     # print(word_dict)
     vocab_size = len(word_dict)

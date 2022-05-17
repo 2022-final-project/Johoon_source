@@ -45,8 +45,8 @@ class preProcessing():
 
         self.vocab = sorted(self.vocab.items(), reverse = True, key = lambda item: item[1])
 
-        print(" 보캅^^")
-        print(self.vocab)
+        # print(" 보캅^^")
+        # print(self.vocab)
 
         for key, value in self.vocab:
             w.write(key + '\n')
@@ -226,9 +226,9 @@ class preProcessing():
                 # print("   -----> ", word_list[idx + 1])
                 alias_list.append(word_list[idx + 1])
 
-            for key, value in enumerate(alias_list):
-                print(key, ":", value)
-            print("word list : ", word_list)
+            # for key, value in enumerate(alias_list):
+            #     print(key, ":", value)
+            # print("word list : ", word_list)
     # 이후 쿼리의 마지막은 word == word_list[len(word_list) - 1] 로 수정
             for word in word_list:
                 if word == word_list[len(word_list) - 1]:
@@ -238,9 +238,9 @@ class preProcessing():
                     word = word[4:]
                     # ("w fwe afe ;", word)
                 
-                print("before : ", word)
+                # rint("before : ", word)
                 word = self.word_refine(word)
-                print("after : ", word)
+                # print("after : ", word)
                 if word == "":
                     continue
                 if word in self.sql_words or (48 <= ord(word[0]) and ord(word[0]) <= 57) or word in alias_list:
@@ -256,12 +256,12 @@ class preProcessing():
                     continue
 
                 for alias in alias_list:
-                    print(" alias : [", alias, "] : word is ", word)
+                    # print(" alias : [", alias, "] : word is ", word)
                     if len(alias) < len(word):
                         if word[0:len(alias)] == alias and word[len(alias)] == ".":
-                            print(" word ", word, " 가 작업하러 들어옴")
+                            # print(" word ", word, " 가 작업하러 들어옴")
                             word = word[len(alias) + 1:]
-                            print("   after 작업 : ", word)
+                            # print("   after 작업 : ", word)
                     if end_flag:
                         end_flag = False
                         w.write('\n')
