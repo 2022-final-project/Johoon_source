@@ -1,24 +1,55 @@
-from unittest.util import strclass
-from transformers import BertTokenizer, BertModel
-import torch
-from preProcessing import preProcessing
+# import torch
+# from transformers import BertTokenizer, BertLMHeadModel
 
-if __name__ == '__main__':
-    # pre = preProcessing()
+# tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+# model = BertLMHeadModel.from_pretrained("bert-base-uncased")
 
-    # v = open('./vocab.txt', 'r')
-    # ov = open('./one_line_vocab.txt', 'w')
+# inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
 
-    # while True:
-    #     word = v.readline()
-    #     if word == "":
-    #         break
-    #     ov.write(word[:len(word) - 1] + " ")
+# print("[input information]")
+# print(inputs)
 
-    rov = open('./one_line_vocab.txt', 'r')
-    str = rov.readline()
-    print("String is ", str)
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-    print(" yeah dude")
-    print(tokenizer.tokenize(str))
-    model = BertModel.from_pretrained("bert-base-uncased")
+# v = open('./vocab.txt', 'r')
+
+# inputs = {}
+
+# for i, v in enumerate(v):
+#     inputs[v[:len(v) - 1]] = i
+
+# print(inputs)
+
+# outputs = model(**inputs, labels=inputs["input_ids"])
+
+# loss = outputs.loss
+# logits = outputs.logits
+
+# print("loss : ", loss)
+
+import argparse
+from tokenizers import BertWordPieceTokenizer
+from tokenizers import 
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--corpus_file", type=str)
+parser.add_argument("--vocab_size", type=int, default=32000)
+parser.add_argument("--limit_alphabet", type=int, default=6000)
+
+args = parser.parse_args()
+
+tokenizer = BertWordPieceTokenizer(
+    vocab_file='./vocab.txt',
+    clean_text=True,
+    handle_chinese_chars=True,
+    strip_accents=False, # Must be False if cased model
+    lowercase=False,
+    wordpieces_prefix="##"
+)
+
+tokenizer.train(
+    files=[args.corpus_file],
+    limit_alphabet=args.limit_alphabet,
+    vocab_size=args.vocab_size
+)
+
+tokenizer.save("./", "ch-{}-wpm-{}".format(args.limit_alphabet, args.vocab_size))
