@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import token
 from transformers import BertTokenizer
 from transformers import BertModel
 from transformers import BertConfig
@@ -8,6 +9,11 @@ import torch
 
 configuration = BertConfig(500)
 tokenizer = BertTokenizer.from_pretrained("./vocab.txt")
+
+print("[tokenizer]")
+print(tokenizer)
+print("tokenizer size : ", len(tokenizer))
+
 model1 = BertModel(configuration)
 model2 =  BertForMultipleChoice(configuration)
 model3 = BertForPreTraining(configuration)
@@ -15,6 +21,8 @@ model4 = position.PositionalEmbedding()
 
 configuration1 = model1.config
 configuration2 = model2.config
+
+model1.embeddings.position_embeddings()
 
 prompt = "select c1, c2 from t1, t2 where c2"
 choice0 = "1.0"
