@@ -4,7 +4,8 @@ from transformers import BertModel
 from transformers import BertConfig
 from transformers import BertForMultipleChoice
 from transformers import BertForPreTraining
-import position
+from bert_ import BERTEmbedding
+import linecache
 import torch
 
 configuration = BertConfig(500)
@@ -12,26 +13,26 @@ tokenizer = BertTokenizer.from_pretrained("./vocab.txt")
 
 print("[tokenizer]")
 print(tokenizer)
-print("tokenizer size : ", len(tokenizer))
 
 model1 = BertModel(configuration)
-model2 =  BertForMultipleChoice(configuration)
+model2 = BertForMultipleChoice(configuration)
 model3 = BertForPreTraining(configuration)
-model4 = position.PositionalEmbedding()
+# model4 = position.PositionalEmbedding()
 
 configuration1 = model1.config
 configuration2 = model2.config
 
-model1.embeddings.position_embeddings()
+# model1.embeddings.position_embeddings()
+# model1.embeddings = BERTEmbedding(vocab_size=len(tokenizer), embed_size=250)
 
-prompt = "select c1, c2 from t1, t2 where c2"
-choice0 = "1.0"
-choice1 = "2.0"
-choice2 = "4.0"
-choice3 = "8.0"
-choice4 = "16.0"
-choice5 = "32.0"
-labels = torch.tensor(0).unsqueeze(0)  
+# prompt = "select c1, c2 from t1, t2 where c2"
+# choice0 = "1.0"
+# choice1 = "2.0"
+# choice2 = "4.0"
+# choice3 = "8.0"
+# choice4 = "16.0"
+# choice5 = "32.0"
+# labels = torch.tensor(0).unsqueeze(0)  
 
 # encoding = tokenizer([prompt, prompt, prompt, prompt, prompt, prompt], [choice0, choice1, choice2, choice3, choice4, choice5], return_tensors="pt", padding=True, truncation=True)
 # outputs2 = model2(**{k: v.unsqueeze(0) for k, v in encoding.items()}, labels=labels)
@@ -49,6 +50,12 @@ print("[outputs 3]\n", outputs3)
 
 prediction_logits = outputs3.prediction_logits
 seq_relationship_logits = outputs3.seq_relationship_logits
+
+print("[prediction_logits]")
+print(prediction_logits)
+
+print("[seq_relationship_logits]")
+print(seq_relationship_logits)
 
 # print("loss : ", loss)
 # print("logits : ", logits)

@@ -1,6 +1,7 @@
 import torch.nn as nn
 # from .token import TokenEmbedding
-from .position import PositionalEmbedding
+from position import PositionalEmbedding
+from token import TokenEmbedding
 # from .segment import SegmentEmbedding
 
 
@@ -21,7 +22,7 @@ class BERTEmbedding(nn.Module):
         :param dropout: dropout rate
         """
         super().__init__()
-        # self.token = TokenEmbedding(vocab_size=vocab_size, embed_size=embed_size)
+        self.token = TokenEmbedding(vocab_size=vocab_size, embed_size=embed_size)
         self.position = PositionalEmbedding(d_model=self.token.embedding_dim)
         # self.segment = SegmentEmbedding(embed_size=self.token.embedding_dim)
         self.dropout = nn.Dropout(p=dropout)
