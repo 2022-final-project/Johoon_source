@@ -48,14 +48,14 @@ print("[outputs 3]\n", outputs3)
 # loss = outputs2.loss
 # logits = outputs2.logits
 
-prediction_logits = outputs3.prediction_logits
-seq_relationship_logits = outputs3.seq_relationship_logits
+# prediction_logits = outputs3.prediction_logits
+# seq_relationship_logits = outputs3.seq_relationship_logits
 
-print("[prediction_logits]")
-print(prediction_logits)
+# print("[prediction_logits]")
+# print(prediction_logits)
 
-print("[seq_relationship_logits]")
-print(seq_relationship_logits)
+# print("[seq_relationship_logits]")
+# print(seq_relationship_logits)
 
 # print("loss : ", loss)
 # print("logits : ", logits)
